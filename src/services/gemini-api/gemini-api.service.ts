@@ -2,7 +2,7 @@ import axios from "axios";
 
 import {
   GeminiAPIResponseInterface,
-  RequestBodyInterface,
+  GeminiAPIRequestBodyInterface,
 } from "./gemini-api.interfaces";
 import { GEMINI_API_KEY, GEMINI_API_URL } from "../../constants/env.constants";
 
@@ -16,11 +16,11 @@ export class GeminiAPIService {
 
       return this.getResponseData(response.data);
     } catch (error) {
-      throw new Error(`Error: ${error}`);
+      throw new Error(`Error in GeminiAPIService: ${error}`);
     }
   }
 
-  static createRequestBody(prompt: string): RequestBodyInterface {
+  static createRequestBody(prompt: string): GeminiAPIRequestBodyInterface {
     return {
       contents: [
         {

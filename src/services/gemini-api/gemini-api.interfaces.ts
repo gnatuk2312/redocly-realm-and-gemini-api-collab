@@ -1,4 +1,4 @@
-export interface RequestBodyInterface {
+export interface GeminiAPIRequestBodyInterface {
   contents: {
     parts: {
       text: string;
