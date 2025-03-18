@@ -1,7 +1,7 @@
-Okay, here are 5 car brands:
+Okay, here are 5 city names:
 
-1.  **Toyota**
-2.  **Honda**
-3.  **Ford**
-4.  **Chevrolet**
-5.  **BMW**
+1.  **London**
+2.  **Tokyo**
+3.  **New York**
+4.  **Paris**
+5.  **Rome**

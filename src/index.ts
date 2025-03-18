@@ -1,34 +1,36 @@
-import { exec } from "child_process";
 import { writeFileSync, readFileSync } from "fs";
 
-import { COMMAND, YAML_FILE_PATH } from "./constants";
+import { COMMAND, YAML_FILE_PATH } from "../src/constants/common.constants";
 import { GeminiAPIService } from "./services/gemini-api/gemini-api.service";
+import { RedoclyRealmService } from "./services/redocly-realm/redocly-realm.service";
 
-// const yamlFileContent = readFileSync(YAML_FILE_PATH, "utf-8");
+const main = async () => {
+  while (true) {
+    try {
+      console.log("Running Redocly Realm command...");
+      const errorMessage = await RedoclyRealmService.runCommand(COMMAND);
 
-// const childProcess = exec(COMMAND, (error, standardOutput, standardError) => {
-//   const errorText = error ? `Error: ${error.message}\n` : "";
+      writeFileSync("error-message.md", errorMessage, "utf-8");
 
-//   const standardErrorText = standardError
-//     ? `Standard Error: ${standardError}\n`
-//     : "";
+      console.log("Asking GeminiAI for a solution...");
+      const yamlFileContent = readFileSync(YAML_FILE_PATH, "utf-8");
 
-//   const logContent = `${errorText}${standardErrorText}`;
+      const solution = await GeminiAPIService.askAI(
+        `I've got the following .yaml file: \n\n ${yamlFileContent}.
+      \n There is an error, which I receive from my compiler:
+      \n ${errorMessage}.
+      \n\n Check out this .yaml file, fix the errors and return only the content of correct .yaml file.
+      \n No explanation needed! 
+      \nDo not add \`\`\`yaml at the start and the end of the solution, only pure file content needed`
+      );
 
-//   if (logContent.trim()) {
-//     writeFileSync("error-log.txt", logContent, "utf-8");
-//   }
-// });
+      console.log("Regenerating museum-api.yaml file...");
 
-// childProcess.stdout?.pipe(process.stdout);
-// childProcess.stderr?.pipe(process.stderr);
+      writeFileSync(YAML_FILE_PATH, solution, "utf-8");
+    } catch (error) {
+      console.error("Error executing command:", error);
+    }
+  }
+};
 
-// GeminiAPIService.askAI(`I've got the following .yaml file: \n\n ${yamlFileContent}.
-//   \n There is an error, which I receive from my compiler:
-//   \n ${errorText}.
-//   \n\n Check out this .yaml file, fix the errors and return only the content of correct .yaml file.
-//   \n No explanation needed!`);
-
-GeminiAPIService.askAI("Name 5 car brands").then((solution) =>
-  console.log(solution)
-);
+main();
