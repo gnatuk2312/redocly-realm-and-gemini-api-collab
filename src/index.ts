@@ -1,6 +1,10 @@
 import { writeFileSync, readFileSync } from "fs";
 
-import { COMMAND, YAML_FILE_PATH } from "../src/constants/common.constants";
+import {
+  COMMAND,
+  YAML_FILE_PATH,
+  YAML_EXAMPLE_FILE_PATH,
+} from "../src/constants/common.constants";
 import { GeminiAPIService } from "./services/gemini-api/gemini-api.service";
 import { RedoclyRealmService } from "./services/redocly-realm/redocly-realm.service";
 
@@ -21,6 +25,12 @@ const main = async () => {
       writeFileSync(YAML_FILE_PATH, solution, "utf-8");
     } catch (error) {
       console.error("Error executing command:", error);
+
+      const yamlExampleFileContent = readFileSync(
+        YAML_EXAMPLE_FILE_PATH,
+        "utf-8"
+      );
+      writeFileSync(YAML_FILE_PATH, yamlExampleFileContent, "utf-8");
     }
   }
 };
